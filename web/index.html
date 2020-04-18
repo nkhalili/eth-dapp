@@ -73,6 +73,9 @@
       var version = web3.version;
       console.log("Web3 version is: " + version);
 
+      var ApprovalContract = new web3.eth.Contract(abi, contractAddress);
+      console.log(ApprovalContract);
+
       $('#contract-form').submit(function(){
         event.preventDefault();
 
@@ -95,6 +98,17 @@
           alert('You must send more than 0 ETH.');
           return;
         }
+        
+        // run Smart contract's deposit method to send money between accounts
+        ApprovalContract.methods.deposit(toAddress).send({from: fromAddress, gas:100000, value: web3.utils.toWei(amount, 'ether')},
+        function(error, result) {
+          if(error) {
+            console.log('Error: ' + error);
+            $('#deposit-result').html('Error: ' + error);
+          } else {
+            $('#deposit-result').html('Success TX: <b>' + result + '</b>');
+          }
+        })
       });
 
       $('#get-balance-form').submit(function(){
@@ -111,7 +125,35 @@
         });
       });
       
+      $('#approve-form').submit(function() {
+          event.preventDefault();
 
+          ApprovalContract.methods.approve().call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef', gas: 100000},
+              function(error, result) {
+                if (error) {
+                  console.log('error: ' + error);
+                }
+                else {
+                  console.log('result: ' + JSON.stringify(result));
+                  $('#approval-display').html('Transaction Approved. TX: <b>' + result + '</b>');
+                }
+              });
+      });
+      
+      $('#approver-form').submit(function() {
+        event.preventDefault();
+
+        ApprovalContract.methods.viewApprover().call(
+            function(error, result) {
+              if (error) {
+                console.log('error: ' + error);
+              }
+              else {
+                console.log('result: ' + JSON.stringify(result));
+                $('#approver-display').html('Approver Address: <b>' + result + '</b>');
+              }
+            });
+        });
     </script>
 
     </body>

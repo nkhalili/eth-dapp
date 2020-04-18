@@ -128,7 +128,7 @@
       $('#approve-form').submit(function() {
           event.preventDefault();
 
-          ApprovalContract.methods.approve().call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef', gas: 100000},
+          ApprovalContract.methods.approve().call({from: fromAddress, gas: 100000},
               function(error, result) {
                 if (error) {
                   console.log('error: ' + error);
@@ -139,7 +139,7 @@
                 }
               });
       });
-      
+
       $('#approver-form').submit(function() {
         event.preventDefault();
 

@@ -76,6 +76,8 @@
       var ApprovalContract = new web3.eth.Contract(abi, contractAddress);
       console.log(ApprovalContract);
 
+      
+
       $('#contract-form').submit(function(){
         event.preventDefault();
 
@@ -116,7 +118,7 @@
         
         web3.eth.getBalance(contractAddress, function(error, result){
           if(error) {
-            cosole.log('Error: ' + error);
+            console.log('Error: ' + error);
           } else {
             console.log('balance: ' + result);
             // convert Wei to ETH by using web3.utils
@@ -128,6 +130,8 @@
       $('#approve-form').submit(function() {
           event.preventDefault();
 
+          var fromAddress = $('#fromAddress').val();
+          
           ApprovalContract.methods.approve().call({from: fromAddress, gas: 100000},
               function(error, result) {
                 if (error) {
